@@ -45,17 +45,51 @@ import pyperclip, re
 inputText = pyperclip.paste()
 
 # 2. Create two regexes, one for matching phone numbers and the other
-#     for matching email addresses.
+#    for matching email addresses.
+findNum = re.compile(r"""(
+    (?:\d{3}|\(\d{3}\))?      # Non-capturing group for area code
+    (?:\s|-|\.)?              # Non-capturing group for spacer
+    \d{3}                     # 3 digits
+    (?:\s|-|\.)               # Non-capturing group for spacer
+    \d{4}                     # 4 digits
+    (?:\s*(?:ext|x|ext.)\s*\d{2,5})?  # Non-capturing group for extension
+)""", re.VERBOSE)
+
+findEmail = re.compile(r"""
+[a-zA-Z0-9._%+-]+	# One or more of the allowed email characters
+@	# The plain @ symbol
+[a-zA-Z0-9.-]+	# One or more of the allowed domain characters
+\.	# The plain . symbol
+[a-zA-Z]{2,}	# Two or more letters for the TLD
+""", re.VERBOSE)
 
 
 # 3. Find all matches, not just the first match, of both regexes.
-
+phNumbers = findNum.findall(inputText)
+emails = findEmail.findall(inputText)
 
 # 4. Neatly format the matched strings into a single string to paste.
+matches = phNumbers + emails
+if matches:
+    outputText = ', '.join(matches)
+else:
+    outputText = ''
 
+"""
+outputText = ', '.join(phNumbers)
+if not outputText:
+    outputText = outputText + ', '.join(emails)
+else:
+    outputText = outputText + ', ' + ', '.join(emails)
+"""
 
 # 5. Display some kind of message if no matches were found in the text.
-
+if not outputText:
+    print('No matches found. Clipboard unchanged.')
 
 # 6. Use Pyperclip to put the results back on the clipboard
-#pyperclip.copy(finalStringVariable)
+else:
+    pyperclip.copy(outputText)
+    print(f'Found phone numbers: {len(phNumbers)}')
+    print(f'Found emails: {len(emails)}')
+    print('Results added to clipboard.')
