@@ -57,10 +57,10 @@ findNum = re.compile(r"""(
 
 findEmail = re.compile(r"""
 [a-zA-Z0-9._%+-]+	# One or more of the allowed email characters
-@	# The plain @ symbol
-[a-zA-Z0-9.-]+	# One or more of the allowed domain characters
-\.	# The plain . symbol
-[a-zA-Z]{2,}	# Two or more letters for the TLD
+@					# The plain @ symbol
+[a-zA-Z0-9.-]+		# One or more of the allowed domain characters
+\.					# The plain . symbol
+[a-zA-Z]{2,}		# Two or more letters for the TLD
 """, re.VERBOSE)
 
 
