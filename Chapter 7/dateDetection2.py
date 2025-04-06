@@ -17,9 +17,7 @@ Leap years are every year evenly divisible by 4, except for years evenly divis-
 ible by 100, unless the year is also evenly divisible by 400. Note how this cal-
 culation makes it impossible to make a reasonably sized regular expression
 that can detect a valid date.
-"""
 
-"""
 Trying this one again with a regex that filters most of the invalid
 dates already, uses a dictionary for days-in-the-month, and some other
 alternatives I want to try, thanks to a code review from Grok3 on my
