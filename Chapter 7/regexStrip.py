@@ -14,29 +14,14 @@ import re
 
 def regexStrip(inputText, rmChars = r'\s'):
 
-    # Copy inputText to working string for non-destructive work
-    cleanText = inputText
-    
     # Put the characters in a regex class by wrapping with []
     rmChars = '[' + rmChars + ']'
                 
-    # Regex that matches any string starting with rmChars
-    removalS = re.compile('^' + rmChars)
-    # Regex that matches any string ending with rmChars
-    removalE = re.compile(rmChars + '$')
+    # Regex that matches any string starting or ending with rmChars
+    removal = re.compile('^' + rmChars + '+|' + rmChars + '+$')
     
-    # If I get a match, remove first char, then check again
-    match = removalS.findall(cleanText)
-    while match:
-        cleanText = cleanText[1:]
-        match = removalS.findall(cleanText)
-
-    # If no match, move on to checking the end for rmChars
-    match = removalE.findall(cleanText)
-    # If I get a match, remove last char and check again
-    while match:
-        cleanText = cleanText[0:len(cleanText) - 1]
-        match = removalE.findall(cleanText)
+    # Use re.sub to substitute the removal pattern
+    cleanText = re.sub(removal, '', inputText)
     
     return cleanText
 
