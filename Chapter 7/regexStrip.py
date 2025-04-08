@@ -12,23 +12,65 @@ be removed from the string.
 
 import re
 
-def regexStrip(inputText, removeChars):
+def regexStrip(inputText, rmChars = r'\s'):
+
+    # Copy inputText to working string for non-destructive work
+    cleanText = inputText
     
-    # If removeChars is empty, remove whitespace characters from inputText
-    # but leave inner whitespace intact
-        # regex that matches any string starting with space
-        # if I get a match, remove first char, then check again
-        # if no match, move on to checking the end for space
-        # if I get a match, remove last char (length of string - 1)
+    # If rmChars has more than one character, I need to add |
+    # and ^ or $
+    if len(rmChars) > 1 and (rmChars != r'\s' and rmChars != r'\d' and rmChars != r'\w'):
+        rmCharsS = rmChars[0]
+        for i in range(len(rmChars) - 1):
+            rmCharsS = rmCharsS + '|^' + rmChars[i+1]
+            
+        rmCharsE = rmChars[0]
+        for i in range(len(rmChars) - 1):
+            rmCharsE = rmCharsE + '$|' + rmChars[i+1]
+    else:
+        rmCharsS, rmCharsE = rmChars, rmChars
         
-        
-        # RegEx match
-        removal = re.compile(r"""
-            ^(^\s)			# begins with non-space character
-            .*				# contains anything
-            \S$				# ends with non-space character
-                             """, re.VERBOSE)
-        
+                
+    # Regex that matches any string starting with rmChars
+    #removalS = re.compile('^' + rmChars + '.*', re.DOTALL)
+    removalS = re.compile('^' + rmCharsS)
+    # Regex that matches any string ending with rmChars
+    #removalE = re.compile('.*' + rmChars + '$', re.DOTALL)
+    removalE = re.compile(rmCharsE + '$')
     
+    # If I get a match, remove first char, then check again
+    match = removalS.findall(cleanText)
+    while match:
+        cleanText = cleanText[1:]
+        match = removalS.findall(cleanText)
+
+    # If no match, move on to checking the end for rmChars
+    match = removalE.findall(cleanText)
+    # If I get a match, remove last char and check again
+    while match:
+        cleanText = cleanText[0:len(cleanText) - 1]
+        match = removalE.findall(cleanText)
     
-    # If removeChars is received, remove those characters from inputText
+    # Print final cleaned string
+    #print(f'Original text was: "{inputText}"')
+    #print(f'Stripped text is: "{cleanText}"')
+    
+    return cleanText
+
+# Test
+test = '   This is a test  '
+print(f'Original text: "{test}"\nCleaned text:  "{regexStrip(test)}"')
+
+test = 'spamTest text herespam'
+print(f'Original text: "{test}"\nCleaned text:  "' + regexStrip(test, 'maps') + '"')
+
+test = ' \n This\nis\na\ntest \n '
+print(f'Original text: "{test}"\nCleaned text:  "{regexStrip(test)}"')
+# regexStrip(' \n This\nis\na\ntest \n ')
+
+test = '234Test567'
+print(f'Original text: "{test}"\nCleaned text:  "' + regexStrip(test, r'\d') + '"')
+#regexStrip('234Test567', '\d')
+
+test = 'qwerty123 Test Text 456asdfg'
+print(f'Original text: "{test}"\nCleaned text:  "' + regexStrip(test, r'\w') + '"')
