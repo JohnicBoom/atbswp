@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# regexStrip2.py - regex version of the strip() method
+# regexStrip.py - regex version of the strip() method
 
 """
 Write a function that takes a string and does the same thing as
