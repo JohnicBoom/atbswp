@@ -42,12 +42,12 @@ print('Welcome to John & Julia\'s Sandwich & Sides! Let us make you a great sand
 
 # Menu for bread type: wheat, white, or sourdough
 promptBread = 'Which type of bread would you like?\n'
-bread = pyip.inputMenu(BREAD_OPTIONS, prompt = promptBread, default = 'sourdough', limit = 3, numbered = True)
+bread = pyip.inputMenu(BREAD_OPTIONS, prompt = promptBread, default = 'Sourdough', limit = 3, numbered = True)
 totalCost += prices[bread]
 
 # Menu for protein type: chicken, turkey, ham, or tofu
 promptProtein = 'Which type of protein would you like?\n'
-protein = pyip.inputMenu(PROTEIN_OPTIONS, prompt = promptProtein, default = 'turkey', limit = 3, numbered = True)
+protein = pyip.inputMenu(PROTEIN_OPTIONS, prompt = promptProtein, default = 'Turkey', limit = 3, numbered = True)
 totalCost += prices[protein]
 
 # Yes/No for cheese type, then menu to specify:
@@ -65,21 +65,13 @@ totalCost += prices[cheese]
 
 # Yes/No for each mayo, mustard, lettuce, or tomato
 print('Now for the toppings:')
-mayo = pyip.inputYesNo(prompt = 'Mayo? (yes or no) ', limit = 3, default = 'yes')
-if mayo == 'yes':
-    totalCost += prices['Mayo']
-    
-mustard = pyip.inputYesNo(prompt = 'Mustard? (yes or no) ', limit = 3, default = 'yes')
-if mustard == 'yes':
-    totalCost += prices['Mustard']
-    
-lettuce = pyip.inputYesNo(prompt = 'Lettuce? (yes or no) ', limit = 3, default = 'yes')
-if lettuce == 'yes':
-    totalCost += prices['Lettuce']
-    
-tomato = pyip.inputYesNo(prompt = 'Tomato? (yes or no) ', limit = 3, default = 'yes')
-if tomato == 'yes':
-    totalCost += prices['Tomato']
+
+toppings = {'Mayo': '', 'Mustard': '', 'Lettuce': '', 'Tomato': ''}
+
+for topping in toppings.keys():
+    toppings[topping] = pyip.inputYesNo(prompt = f'{topping}? (yes or no) ', limit = 3, default = 'yes')
+    if toppings[topping] == 'yes':
+        totalCost += prices[topping]
 
 # Int for how many sandwiches
 promptSandwich = 'How many sandwiches would you like? '
@@ -87,6 +79,5 @@ number = pyip.inputInt(prompt = promptSandwich, limit = 3, min = 1, default = 1)
 totalCost *= number
 
 # Display order & total
-print(f'Here\'s your order:\nBread: {bread}\nProtein: {protein}')
-print(f'Cheese: {cheese}\nMayo: {mayo}\nMustard: {mustard}\nLettuce: {lettuce}\nTomato: {tomato}')
-print(f'Your total will be ${totalCost:,.2f}\nPlease pay at the register.')
+print(f'\nHere\'s your order:\nBread: {bread}\nProtein: {protein}\nCheese: {cheese if cheese != 'no' else 'None'}\nMayo: {toppings['Mayo'].capitalize()}\nMustard: {toppings['Mustard'].capitalize()}\nLettuce: {toppings['Lettuce'].capitalize()}\nTomato: {toppings['Tomato'].capitalize()}')
+print(f'\nYour total will be ${totalCost:,.2f}\nPlease pay at the register.')
